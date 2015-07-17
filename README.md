@@ -6,3 +6,7 @@ PHPQA Analyzer CLI tool
 http://carlosbuenosvinos.com/write-your-git-hooks-in-php-and-keep-them-under-git-control/  
 http://phpqatools.org/  
 
+## How to use 
+```
+$ composer require jmolivas/phpqa
+```
