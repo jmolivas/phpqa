@@ -1,0 +1,44 @@
+application:
+  project:
+   - php
+   - symfony
+   - drupal
+  analyzer:
+    composer:
+      enabled: true
+      exception: false
+    parallel-lint:
+      enabled: true
+      exception: true
+      options:
+      arguments:
+    php-cs-fixer:
+      enabled: true
+      exception: true
+      file:
+        config-file: .php_cs
+      options:
+        verbose:
+        level: psr2
+        config-file: .php_cs
+      arguments:
+        fix:
+    phpunit:
+      file:
+        configuration: phpunit.xml.dist
+      options:
+        configuration: phpunit.xml.dist
+      arguments:
+  messages:
+    files:
+      info: Files to analyze
+    git:
+      info: Extracting files to be committed
+    parallel-lint:
+      info: Running Paralell Lint
+      error: PHP Parallel Lint found errors
+    composer:
+      info: Check composer.json & composer.lock files
+      error: composer.lock should be commited if composer.json is modified!
+    php-cs-fixer:
+      info: Check Code style

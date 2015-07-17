@@ -1,0 +1,11 @@
+# Composer
+/vendor
+/bin/pdepend
+/bin/php-cs-fixer
+/bin/phpcbf
+/bin/phpcpd
+/bin/phpcs
+/bin/phpdcd
+/bin/phpunit
+/bin/phploc
+/bin/phpmd

@@ -1,0 +1,11 @@
+application:
+  analyzer:
+    composer:
+      enabled: true
+      exception: false
+    parallel-lint:
+      enabled: true
+      exception: false
+    php-cs-fixer:
+      enabled: true
+      exception: false
