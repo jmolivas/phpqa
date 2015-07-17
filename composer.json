@@ -1,6 +1,6 @@
 {
     "name": "jmolivas/phpqa",
-    "description": "PHP QA Analyze",
+    "description": "PHP QA Analyzer",
     "keywords": ["PHP", "QA", "Development"],
     "type": "project",
     "license": "MIT",
