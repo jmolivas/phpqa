@@ -40,19 +40,25 @@ class AnalyzeCommand extends Command
     {
         $project = $input->getOption('project');
 
-        /** @var \JMOlivas\Phpqa\Console\Application $application */
+        /**
+         * @var \JMOlivas\Phpqa\Console\Application $application
+         */
         $application = $this->getApplication();
 
-        /** @var \JMOlivas\Phpqa\Config $config */
+        /**
+         * @var \JMOlivas\Phpqa\Config $config
+         */
         $config = $application->getConfig();
         $config->loadProjectConfiguration($project);
 
         $this->directory = $application->getApplicationDirectory();
 
-        $output->writeln(sprintf(
-            '<question>%s</question>',
-            $application->getName()
-        ));
+        $output->writeln(
+            sprintf(
+                '<question>%s</question>',
+                $application->getName()
+            )
+        );
 
         $files = $input->getOption('files');
 
@@ -64,10 +70,12 @@ class AnalyzeCommand extends Command
             $files = $this->extractCommitedFiles($output, $config);
         }
 
-        $output->writeln(sprintf(
-            '<info>%s</info>',
-            $config->get('application.messages.files.info')
-        ));
+        $output->writeln(
+            sprintf(
+                '<info>%s</info>',
+                $config->get('application.messages.files.info')
+            )
+        );
 
         foreach ($files as $file) {
             $output->writeln(
@@ -80,42 +88,34 @@ class AnalyzeCommand extends Command
 
         $this->checkComposer($output, $files, $config);
 
-        $this->analyzer($output, 'parallel-lint', $files, $config);
+        $this->analyzer($output, 'parallel-lint', $files, $config, $project);
 
-//        $output->writeln('<info>Checking code style</info>');
-//        if (!$this->codeStyle($output, $files)) {
-//            throw new \Exception(sprintf('There are coding standards violations!'));
-//        }
+        $this->analyzer($output, 'php-cs-fixer', $files, $config, $project);
 
-        $this->analyzer($output, 'php-cs-fixer', $files, $config);
+        $this->analyzer($output, 'phpcbf', $files, $config, $project);
 
-        $output->writeln('<info>Fixing code style with PHPCBF</info>');
-        if (!$this->codeStylePsr($output, $files, 'phpcbf')) {
-            throw new \Exception(sprintf('There are PHPCS coding standards violations! and some got fixed by PHPCBF'));
-        }
+        $this->analyzer($output, 'phpcs', $files, $config, $project);
 
-        $output->writeln('<info>Checking code style with PHPCS</info>');
-        if (!$this->codeStylePsr($output, $files, 'phpcs')) {
-            throw new \Exception(sprintf('There are PHPCS coding standards violations!'));
-        }
+        $this->analyzer($output, 'phpmd', $files, $config, $project);
 
-//        $output->writeln('<info>Checking code mess with PHPMD</info>');
-//        $this->phPmd($output, $files);
+        $this->analyzer($output, 'phpunit', $files, $config, $project);
 
-        $output->writeln('<info>Running unit tests</info>');
-        if (!$this->unitTests($output, $project, $config)) {
-            throw new \Exception('PHPUnit test failed!');
-        }
-
-        $output->writeln('<info>Analysis Completed!</info>');
+        $output->writeln(
+            sprintf(
+                '<info>%s</info>',
+                $config->get('application.messages.completed.info')
+            )
+        );
     }
 
     private function extractCommitedFiles($output, $config)
     {
-        $output->writeln(sprintf(
-            '<info>%s</info>',
-            $config->get('application.messages.git.info')
-        ));
+        $output->writeln(
+            sprintf(
+                '<info>%s</info>',
+                $config->get('application.messages.git.info')
+            )
+        );
 
         $files = [];
         $rc = 0;
@@ -140,10 +140,12 @@ class AnalyzeCommand extends Command
             return;
         }
 
-        $output->writeln(sprintf(
-            '<info>%s</info>',
-            $config->get('application.messages.composer.info')
-        ));
+        $output->writeln(
+            sprintf(
+                '<info>%s</info>',
+                $config->get('application.messages.composer.info')
+            )
+        );
 
         $composerJsonDetected = false;
         $composerLockDetected = false;
@@ -163,67 +165,74 @@ class AnalyzeCommand extends Command
                 throw new \Exception($config->get('application.messages.composer.error'));
             }
 
-            $output->writeln(sprintf(
-                '<comment> %s</comment>',
-                $config->get('application.messages.composer.error')
-            ));
+            $output->writeln(
+                sprintf(
+                    '<error> %s</error>',
+                    $config->get('application.messages.composer.error')
+                )
+            );
         }
     }
 
-    private function analyzer($output, $analyzer, $files, $config)
+    private function analyzer($output, $analyzer, $files, $config, $project)
     {
+        $configFile = $config->getProjectAnalyzerConfigFile($project, $analyzer);
+
         $enabled = $config->get('application.analyzer.'.$analyzer.'.enabled');
         if (!$enabled) {
             return;
         }
 
         $exception = $config->get('application.analyzer.'.$analyzer.'.exception');
-
         $options = $config->get('application.analyzer.'.$analyzer.'.options');
         $arguments = $config->get('application.analyzer.'.$analyzer.'.arguments');
-
-        if ($arguments) {
-            $arguments = array_keys($arguments);
-        }
+        $prefixes = $config->get('application.analyzer.'.$analyzer.'.prefixes');
+        $postfixes = $config->get('application.analyzer.'.$analyzer.'.postfixes');
 
         $success = true;
         $this->validateBinary('bin/'.$analyzer);
 
-        $output->writeln(sprintf(
-            '<info>%s</info>',
-            $config->get('application.messages.'.$analyzer.'.info')
-        ));
+        $output->writeln(
+            sprintf(
+                '<info>%s</info>',
+                $config->get('application.messages.'.$analyzer.'.info')
+            )
+        );
+
+        $processArguments = [
+          'php',
+          $this->directory.'bin/'.$analyzer
+        ];
+
+        if ($configFile) {
+            $processArguments[] = $configFile;
+            $singleExecution = $config->get('application.analyzer.'.$analyzer.'.file.single-execution');
+            if ($singleExecution) {
+                $this->executeProcess($output, $processArguments, $arguments, $options);
+                $files = [];
+            }
+        }
 
         foreach ($files as $file) {
             if (!preg_match($this->needle, $file) && !is_dir(realpath($this->directory.$file))) {
                 continue;
             }
 
-            $arguments[] = $file;
-
-            $processBuilder = new ProcessBuilder(['php', $this->directory.'bin/'.$analyzer]);
-
-            if ($arguments) {
-                foreach ($arguments as $argument) {
-                    $processBuilder->add($argument);
+            if ($prefixes) {
+                foreach ($prefixes as $prefix) {
+                    $processArguments[] = $prefix;
                 }
             }
 
-            if ($options) {
-                foreach ($options as $optionName => $optionValue) {
-                    $processBuilder->setOption($optionName, $optionValue);
+            $processArguments[] = $file;
+
+            if ($postfixes) {
+                foreach ($postfixes as $postfix) {
+                    $processArguments[] = $postfix;
                 }
             }
 
-            $process = $processBuilder->getProcess();
-            $process->run();
-
-            if (!$process->isSuccessful()) {
-                $output->writeln(sprintf('<error>%s</error>', trim($process->getErrorOutput())));
-                $success = false;
-            }
-
-            $output->writeln(sprintf('<comment>%s</comment>', trim($process->getOutput())));
+            $this->executeProcess($output, $processArguments, $arguments, $options);
         }
 
         if ($exception && !$success) {
@@ -231,105 +240,37 @@ class AnalyzeCommand extends Command
         }
     }
 
-//    private function codeStyle($output, array $files)
-//    {
-//        $this->validateBinary('bin/php-cs-fixer');
-//
-//        $succeed = true;
-//
-//        foreach ($files as $file) {
-//            if (!preg_match($this->needle, $file) && !is_dir(realpath($this->directory.$file))) {
-//                continue;
-//            }
-//
-//            $processBuilder = new ProcessBuilder(['php', $this->directory.'bin/php-cs-fixer', 'fix', '--verbose', '--level=psr2', $file]);
-//
-//            $phpCsFixer = $processBuilder->getProcess();
-//            $phpCsFixer->run();
-//
-//            if (!$phpCsFixer->isSuccessful()) {
-//                $output->writeln(sprintf('<error>%s</error>', trim($phpCsFixer->getOutput())));
-//
-//                if ($succeed) {
-//                    $succeed = false;
-//                }
-//            }
-//        }
-//
-//        return $succeed;
-//    }
-
-    private function codeStylePsr($output, array $files, $command)
+    public function executeProcess($output, $processArguments, $arguments, $options)
     {
-        $this->validateBinary(sprintf('bin/%s', $command));
+        $success = true;
 
-        $succeed = true;
+        $processBuilder = new ProcessBuilder($processArguments);
 
-        foreach ($files as $file) {
-            if (!preg_match($this->needle, $file) && !is_dir(realpath($this->directory.$file))) {
-                continue;
-            }
-
-            $processBuilder = new ProcessBuilder(['php', $this->directory.'bin/'.$command, '--standard=PSR2', '-n', $file]);
-
-            $phpCsFixer = $processBuilder->getProcess();
-            $phpCsFixer->run();
-
-            if (!$phpCsFixer->isSuccessful()) {
-                $output->writeln(sprintf('<error>%s</error>', trim($phpCsFixer->getOutput())));
-
-                if ($succeed) {
-                    $succeed = false;
-                }
+        if ($arguments) {
+            foreach ($arguments as $argument) {
+                $processBuilder->add($argument);
             }
         }
 
-        return $succeed;
-    }
-
-    private function phPmd($output, $files)
-    {
-        $this->validateBinary('bin/phpmd');
-
-        $succeed = true;
-
-        foreach ($files as $file) {
-            if (!preg_match($this->needle, $file) && !is_dir(realpath($this->directory.$file))) {
-                continue;
-            }
-
-            $processBuilder = new ProcessBuilder(['php', $this->directory.'bin/phpmd', $file, 'text', 'cleancode,codesize,unusedcode,naming,controversial,design']);
-            $process = $processBuilder->getProcess();
-            $process->run();
-
-            if (!$process->isSuccessful()) {
-                $output->writeln($file);
-                $output->writeln(sprintf('<info>%s</info>', trim($process->getErrorOutput())));
-                $output->writeln(sprintf('<comment>%s</comment>', trim($process->getOutput())));
-                if ($succeed) {
-                    $succeed = false;
-                }
+        if ($options) {
+            foreach ($options as $optionName => $optionValue) {
+                $processBuilder->setOption($optionName, $optionValue);
             }
         }
 
-        return $succeed;
-    }
+        $process = $processBuilder->getProcess();
+        $process->run();
 
-    private function unitTests($output, $project, $config)
-    {
-        $configFile = $config->getProjectAnalyzerConfigFile($project, 'phpunit');
+        if (!$process->isSuccessful()) {
+            $output->writeln(sprintf('<error>%s</error>', trim($process->getErrorOutput())));
+            $success = false;
+        }
 
-        $this->validateBinary('bin/phpunit');
+        if ($process->getOutput()) {
+            $output->writeln($process->getOutput());
+        }
 
-        $processBuilder = new ProcessBuilder(['php', $this->directory.'bin/phpunit', $configFile]);
-        $processBuilder->setTimeout(3600);
-        $phpunit = $processBuilder->getProcess();
-
-        $phpunit->run(function ($messageType, $buffer) use ($output) {
-            $output->write($buffer);
-        });
-
-        return $phpunit->isSuccessful();
+        return $success;
     }
 
     private function validateBinary($binaryFile)

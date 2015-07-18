@@ -1,0 +1,24 @@
+application:
+  messages:
+    files:
+      info: Files to analyze
+    git:
+      info: Extracting files to be committed
+    parallel-lint:
+      info: Running Paralell Lint
+      error: PHP Parallel Lint found errors
+    composer:
+      info: Check composer.json & composer.lock files
+      error: composer.lock should be commited if composer.json is modified!
+    php-cs-fixer:
+      info: Running PHP-CS-Fixer
+    phpcbf:
+      info: Running PHPCBF
+    phpcs:
+      info: Running PHPCS
+    phpmd:
+      info: Running PHPMD
+    phpunit:
+      info: Running PHPUnit
+      error: PHPUnit test failed!
+    completed: Analysis Completed!

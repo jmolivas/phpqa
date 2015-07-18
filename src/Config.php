@@ -16,7 +16,9 @@ class Config
     public function __construct()
     {
         $this->config = [];
-        $this->loadFile($this->getBaseConfigDirectory().'config.yml');
+        $this->loadFile(__DIR__.'/../'.'config.yml');
+        $this->loadFile($this->getBaseConfigDirectory().'messages.yml');
+        $this->loadFile($this->getUserHomeDirectory().'messages.yml');
     }
 
     private function loadFile($file = null)

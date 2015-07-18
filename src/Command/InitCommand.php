@@ -19,8 +19,8 @@ class InitCommand extends Command
         'destination' => '.php_cs',
       ],
       [
-        'source' => 'config.yml',
-        'destination' => 'config.yml',
+        'source' => 'messages.yml',
+        'destination' => 'messages.yml',
       ],
       [
         'source' => 'phpunit.xml.dist',
@@ -31,15 +31,14 @@ class InitCommand extends Command
     protected function configure()
     {
         $this
-          ->setName('init')
-          ->setDescription('Copy configuration files to user home directory')
-          ->addOption(
-              'override',
-              null,
-              InputOption::VALUE_NONE,
-              'Override files on user home directory'
-          )
-        ;
+            ->setName('init')
+            ->setDescription('Copy configuration files to user home directory')
+            ->addOption(
+                'override',
+                null,
+                InputOption::VALUE_NONE,
+                'Override files on user home directory'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -54,16 +53,22 @@ class InitCommand extends Command
             $override = $input->getOption('override');
         }
 
+        if (!is_dir($customConfigDirectory)) {
+            mkdir($customConfigDirectory);
+        }
+
         $index = 1;
         foreach ($this->files as $file) {
             $source = $baseConfigDirectory.$file['source'];
             $destination = $customConfigDirectory.'/'.$file['destination'];
             if ($this->copyFile($source, $destination, $override)) {
-                $output->writeln(sprintf(
-                    '<info>%s</info> - <comment>%s</comment>',
-                    $index,
-                    $destination
-                ));
+                $output->writeln(
+                    sprintf(
+                        '<info>%s</info> - <comment>%s</comment>',
+                        $index,
+                        $destination
+                    )
+                );
             }
         }
     }
