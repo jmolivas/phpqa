@@ -54,6 +54,15 @@ application:
       postfixes:
         - 'text'
         - 'cleancode,codesize,unusedcode,naming,controversial,design'
+    phploc:
+      enabled: true
+      exception: false
+    phpcpd:
+      enabled: true
+      exception: false
+    phpdcd:
+      enabled: true
+      exception: false
     phpunit:
       enabled: true
       exception: true

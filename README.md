@@ -31,11 +31,23 @@ Every analyzer tool handles arguments and options using different formats, the g
 
 - [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer)
 
-  PHP_CodeSniffer is a set of two PHP scripts; the main phpcs script that tokenizes PHP, JavaScript and CSS files to detect violations of a defined coding standard, and a second phpcbf script to automatically correct coding standard violations.
+  PHP_CodeSniffer is a set of two PHP scripts; the main `phpcs` script that tokenizes PHP, JavaScript and CSS files to detect violations of a defined coding standard, and a second `phpcbf` script to automatically correct coding standard violations.
 
 - [PHPMD - PHP Mess Detector](http://phpmd.org/)
 
    It is a spin-off project of PHP Depend and aims to be a PHP equivalent of the well known Java tool PMD. PHPMD can be seen as an user friendly and easy to configure frontend for the raw metrics measured by PHP Depend.
+   
+- [PHPLOC](https://github.com/sebastianbergmann/phploc)
+
+  `phploc` is a tool for quickly measuring the size and analyzing the structure of a PHP project
+  
+- [PHPDCD - PHP Dead Code Detector](https://github.com/sebastianbergmann/phpdcd)
+
+  `phpdcd` is a Dead Code Detector (DCD) for PHP code. It scans a PHP project for all declared functions and methods and reports those as being "dead code" that are not called at least once.
+
+- [PHPCPD - PHP Copy/Paste Detector]
+
+  `phpcpd` is a Copy/Paste Detector (CPD) for PHP code.
 
 - [PHPUnit](https://phpunit.de/)
 

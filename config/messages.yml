@@ -22,6 +22,15 @@ application:
     phpmd:
       info: Running PHPMD
       error: PHPMD found errors!
+    phploc:
+      info: Running PHPLOC
+      error: PHPLOC found errors!
+    phpcpd:
+      info: PHP PHPCPD Copy/Paste Detector
+      error: PHPCPD found errors!
+    phpdcd:
+      info: Running PHPDCD Dead Code Detector
+      error: PHPDCD found errors!
     phpunit:
       info: Running PHPUnit
       error: PHPUnit test failed!

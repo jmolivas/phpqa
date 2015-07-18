@@ -98,6 +98,12 @@ class AnalyzeCommand extends Command
 
         $this->analyzer($output, 'phpmd', $files, $config, $project);
 
+        $this->analyzer($output, 'phploc', $files, $config, $project);
+
+        $this->analyzer($output, 'phpcpd', $files, $config, $project);
+
+        $this->analyzer($output, 'phpdcd', $files, $config, $project);
+
         $this->analyzer($output, 'phpunit', $files, $config, $project);
 
         $output->writeln(

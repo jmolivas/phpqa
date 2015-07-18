@@ -18,13 +18,13 @@
         "symfony/process": "2.7.*",
         "jakub-onderka/php-parallel-lint": "0.*",
         "jakub-onderka/php-console-highlighter": "0.*",
+        "fabpot/php-cs-fixer": "@stable",
         "squizlabs/php_codesniffer": "2.3.3",
-        "phpunit/phpunit": "4.6.*",
         "phpmd/phpmd" : "@stable",
         "phploc/phploc": "@stable",
         "sebastian/phpcpd": "@stable",
         "sebastian/phpdcd": "@stable",
-        "fabpot/php-cs-fixer": "@stable"
+        "phpunit/phpunit": "4.6.*"
     },
     "bin": ["bin/phpqa"],
     "config": {
