@@ -93,6 +93,7 @@ $ phpqa analyze --project=PROJECT --files[=FILES]
 ## What features are planned for development?
 - Add command to create new project.
 - Add more analysers:
+  - http://pdepend.org/
   - https://github.com/psecio/iniscan
   - https://github.com/sensiolabs/security-checker
   - https://github.com/sensiolabs/insight
