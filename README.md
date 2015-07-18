@@ -92,5 +92,12 @@ $ phpqa analyze --project=PROJECT --files[=FILES]
 
 ## What features are planned for development?
 - Add command to create new project.
+- Add more analysers:
+  - https://github.com/psecio/iniscan
+  - https://github.com/sensiolabs/security-checker
+  - https://github.com/sensiolabs/insight
+  - http://www.phpmetrics.org/
+- Add analyser via config and not as composer dependency. 
+- Add custom analyzers.
 
 > Note: This project is a work-in-progress and need some love related to code clean up and testing coverage.
