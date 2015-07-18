@@ -11,20 +11,28 @@ class InitCommand extends Command
 {
     private $files = [
       [
-        'source' => 'php/config.yml',
-        'destination' => 'php/config.yml',
-      ],
-      [
         'source' => '.php_cs',
         'destination' => '.php_cs',
+      ],
+      [
+        'source' => 'drupal.yml',
+        'destination' => 'drupal/config.yml',
       ],
       [
         'source' => 'messages.yml',
         'destination' => 'messages.yml',
       ],
       [
-        'source' => 'phpunit.xml.dist',
-        'destination' => 'phpunit.xml.dist',
+        'source' => 'php.yml',
+        'destination' => 'php/config.yml',
+      ],
+      [
+        'source' => 'phpunit.xml',
+        'destination' => 'phpunit.xml',
+      ],
+      [
+        'source' => 'symfony.yml',
+        'destination' => 'symfony/config.yml',
       ],
     ];
 

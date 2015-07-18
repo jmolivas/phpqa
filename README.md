@@ -87,7 +87,11 @@ $ phpqa analyze --project=PROJECT --files[=FILES]
 
 | Option  | Description | 
 | ------- | ----------------------------- |  
-| project | Available default values php, symfony and drupal |
+| project | Available default values php, symfony |
 | files   | If this option is not set then the files added to git index will be scanned. This is useful when setting executing this tool on a git-hook pre-commit. |    
+
+## What features are planned for development?
+- Add support for Drupal and Laravel coding standards.
+- Add command to create new project.
 
 > Note: This project is a work-in-progress and need some love related to code clean up and testing coverage.

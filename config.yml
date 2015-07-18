@@ -67,7 +67,7 @@ application:
       enabled: true
       exception: true
       file:
-        configuration: phpunit.xml.dist
+        configuration: phpunit.xml
         single-execution: true
       options:
       arguments:
