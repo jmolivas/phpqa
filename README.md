@@ -97,7 +97,7 @@ $ phpqa analyze --project=PROJECT --files[=FILES]
   - https://github.com/psecio/iniscan
   - https://github.com/sensiolabs/security-checker
   - https://github.com/sensiolabs/insight
-  - http://www.phpmetrics.org/
+  - https://github.com/Halleck45/PhpMetrics
 - Add analyser via config and not as composer dependency. 
 - Add custom analyzers.
 
