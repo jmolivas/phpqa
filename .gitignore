@@ -9,3 +9,4 @@
 /bin/phpunit
 /bin/phploc
 /bin/phpmd
+/bin/parallel-lint
