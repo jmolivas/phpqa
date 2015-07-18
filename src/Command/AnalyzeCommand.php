@@ -136,7 +136,7 @@ class AnalyzeCommand extends Command
 
     private function checkComposer($output, $files, $config)
     {
-        if (!$config->get('application.analyzer.composer.enabled')) {
+        if (!$config->get('application.method.composer.enabled')) {
             return;
         }
 
@@ -160,7 +160,7 @@ class AnalyzeCommand extends Command
             }
         }
 
-        if ($config->get('application.analyzer.composer.exception')) {
+        if ($config->get('application.method.composer.exception')) {
             if ($composerJsonDetected && !$composerLockDetected) {
                 throw new \Exception($config->get('application.messages.composer.error'));
             }
@@ -176,12 +176,13 @@ class AnalyzeCommand extends Command
 
     private function analyzer($output, $analyzer, $files, $config, $project)
     {
-        $configFile = $config->getProjectAnalyzerConfigFile($project, $analyzer);
-
-        $enabled = $config->get('application.analyzer.'.$analyzer.'.enabled');
-        if (!$enabled) {
+        if (!$config->get('application.analyzer.'.$analyzer.'.enabled')) {
             return;
         }
+
+        $this->validateBinary('bin/'.$analyzer);
+
+        $configFile = $config->getProjectAnalyzerConfigFile($project, $analyzer);
 
         $exception = $config->get('application.analyzer.'.$analyzer.'.exception');
         $options = $config->get('application.analyzer.'.$analyzer.'.options');
@@ -190,7 +191,6 @@ class AnalyzeCommand extends Command
         $postfixes = $config->get('application.analyzer.'.$analyzer.'.postfixes');
 
         $success = true;
-        $this->validateBinary('bin/'.$analyzer);
 
         $output->writeln(
             sprintf(
@@ -208,7 +208,8 @@ class AnalyzeCommand extends Command
             $processArguments[] = $configFile;
             $singleExecution = $config->get('application.analyzer.'.$analyzer.'.file.single-execution');
             if ($singleExecution) {
-                $this->executeProcess($output, $processArguments, $arguments, $options);
+                $process = $this->executeProcess($output, $processArguments, $arguments, $options);
+                $success = $process->isSuccessful();
                 $files = [];
             }
         }
@@ -232,7 +233,11 @@ class AnalyzeCommand extends Command
                 }
             }
 
-            $this->executeProcess($output, $processArguments, $arguments, $options);
+            $process = $this->executeProcess($output, $processArguments, $arguments, $options);
+
+            if ($success) {
+                $success = $process->isSuccessful();
+            }
         }
 
         if ($exception && !$success) {
@@ -242,8 +247,6 @@ class AnalyzeCommand extends Command
 
     public function executeProcess($output, $processArguments, $arguments, $options)
     {
-        $success = true;
-
         $processBuilder = new ProcessBuilder($processArguments);
 
         if ($arguments) {
@@ -263,14 +266,13 @@ class AnalyzeCommand extends Command
 
         if (!$process->isSuccessful()) {
             $output->writeln(sprintf('<error>%s</error>', trim($process->getErrorOutput())));
-            $success = false;
         }
 
         if ($process->getOutput()) {
             $output->writeln($process->getOutput());
         }
 
-        return $success;
+        return $process;
     }
 
     private function validateBinary($binaryFile)
