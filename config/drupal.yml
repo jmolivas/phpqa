@@ -19,8 +19,8 @@ application:
     phpcs:
       enabled: true
       exception: false
-      options:
-        standard: ~/.composer/vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml
+      file:
+        standard: vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml
     phpmd:
       enabled: false
       exception: false

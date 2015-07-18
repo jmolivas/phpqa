@@ -98,6 +98,11 @@ class Config
         $analyserConfigOption = key($analyserConfig);
         $analyserConfigFile = current($analyserConfig);
 
+        $configFile = __DIR__.'/../'.$analyserConfigFile;
+        if (file_exists($configFile)) {
+            return '--'.$analyserConfigOption.'='.$configFile;
+        }
+
         $configFile = getcwd().'/'.$analyserConfigFile;
         if (file_exists($configFile)) {
             return '--'.$analyserConfigOption.'='.$configFile;

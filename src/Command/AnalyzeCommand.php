@@ -213,6 +213,7 @@ class AnalyzeCommand extends Command
         if ($configFile) {
             $processArguments[] = $configFile;
             $singleExecution = $config->get('application.analyzer.'.$analyzer.'.file.single-execution');
+
             if ($singleExecution) {
                 $process = $this->executeProcess($output, $processArguments, $arguments, $options);
                 $success = $process->isSuccessful();
