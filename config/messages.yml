@@ -6,18 +6,22 @@ application:
       info: Extracting files to be committed
     parallel-lint:
       info: Running Paralell Lint
-      error: PHP Parallel Lint found errors
+      error: PHP Parallel Lint found errors!
     composer:
       info: Check composer.json & composer.lock files
       error: composer.lock should be commited if composer.json is modified!
     php-cs-fixer:
       info: Running PHP-CS-Fixer
+      error: PHP-CS-Fixer found errors!
     phpcbf:
       info: Running PHPCBF
+      error: PHPCBF found errors!
     phpcs:
       info: Running PHPCS
+      error: PHPCS found errors!
     phpmd:
       info: Running PHPMD
+      error: PHPMD found errors!
     phpunit:
       info: Running PHPUnit
       error: PHPUnit test failed!
