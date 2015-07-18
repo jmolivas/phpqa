@@ -45,7 +45,7 @@ Every analyzer tool handles arguments and options using different formats, the g
 
   `phpdcd` is a Dead Code Detector (DCD) for PHP code. It scans a PHP project for all declared functions and methods and reports those as being "dead code" that are not called at least once.
 
-- [PHPCPD - PHP Copy/Paste Detector]
+- [PHPCPD - PHP Copy/Paste Detector](https://github.com/sebastianbergmann/phpcpd)
 
   `phpcpd` is a Copy/Paste Detector (CPD) for PHP code.
 
