@@ -6,17 +6,14 @@ PHPQA Analyzer CLI tool
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Overview](#overview)
-- [Install Stand Alone](#install-stand-alone)
-  - [Clone project](#clone-project)
-  - [Install dependencies](#install-dependencies)
-  - [Create symbolink link](#create-symbolink-link)
-- [Include in your project](#include-in-your-project)
-- [How to run this project](#how-to-run-this-project)
+- [Available Analyzers](#available-analyzers)
+- [Install](#install)
+- [Usage](#usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Overview
-This project aims to serve as a CLI tool to unify the use of different PHP tools related to Quality Assurance and code analysis in PHP.
+This project aims to serve as a CLI tool to make easy the use of different PHP tools related to Quality Assurance and code analysis in PHP.
 
 Every analyzer tool handles arguments and options using different formats, the goal of this project is to provide a single way to interact with those projects, you can also set options and arguments using a default configuration file when the project supports it.
 
@@ -75,8 +72,6 @@ $ phpqa init
 $ cd to/project/path
 $ phpqa analyze --project=PROJECT --files[=FILES] 
 ```
-
-**Options:**
 
 | Option  | Description | 
 | ------- | ----------------------------- |  
