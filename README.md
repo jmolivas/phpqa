@@ -9,6 +9,7 @@ PHPQA Analyzer CLI tool
 - [Available Analyzers](#available-analyzers)
 - [Install](#install)
 - [Usage](#usage)
+- [Upcoming features](#upcoming-features)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -90,7 +91,7 @@ $ phpqa analyze --project=PROJECT --files[=FILES]
 | project | Available default values `php`, `symfony` and `drupal` |
 | files   | If this option is not set then the files added to git index will be scanned. This is useful when setting executing this tool on a git-hook pre-commit. |    
 
-## What features are planned for development?
+## Upcoming features
 - Add command to create new project.
 - Add more analysers:
   - https://github.com/pdepend/pdepend
