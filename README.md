@@ -10,6 +10,7 @@ PHPQA Analyzer CLI tool
 - [Install](#install)
 - [Usage](#usage)
 - [Upcoming features](#upcoming-features)
+- [Nice to have features](#nice-to-have-features)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -40,7 +41,7 @@ Every analyzer tool handles arguments and options using different formats, the g
    
 - [PHPLOC](https://github.com/sebastianbergmann/phploc)
 
-  `phploc` is a tool for quickly measuring the size and analyzing the structure of a PHP project
+  `phploc` is a tool for quickly measuring the size and analyzing the structure of a PHP project.
   
 - [PHPDCD - PHP Dead Code Detector](https://github.com/sebastianbergmann/phpdcd)
 
@@ -89,17 +90,21 @@ $ phpqa analyze --project=PROJECT --files[=FILES]
 | Option  | Description | 
 | ------- | ----------------------------- |  
 | project | Available default values `php`, `symfony` and `drupal` |
-| files   | If this option is not set then the files added to git index will be scanned. This is useful when setting executing this tool on a git-hook pre-commit. |    
+| files   | If this option is not set then the files added to git index will be scanned. This is useful when setting executing this tool on a pre-commit git-hook. |
 
 ## Upcoming features
 - Add command to create new project.
-- Add more analysers:
+- Add more analyzers:
   - https://github.com/pdepend/pdepend
   - https://github.com/psecio/iniscan
   - https://github.com/sensiolabs/security-checker
   - https://github.com/sensiolabs/insight
   - https://github.com/Halleck45/PhpMetrics
-- Add analyser via config and not as composer dependency. 
+
+## Nice to have features
+- Add analyzer via config and not as composer dependency.
+- Detect if analyzer is already loaded on the local machine and use that instead of download.
 - Add custom analyzers.
+- Add PaaS analyzers via API.
 
 > Note: This project is a work-in-progress and need some love related to code clean up and testing coverage.
