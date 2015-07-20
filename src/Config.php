@@ -23,6 +23,8 @@ class Config
 
     private function loadFile($file = null)
     {
+        $config = null;
+
         if (file_exists($file)) {
             $parser = new Parser();
             $config = $parser->parse(file_get_contents($file));
