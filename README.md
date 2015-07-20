@@ -86,12 +86,6 @@ $ composer install
 $ ln -s ~/phpqa/bin/phpqa.php /usr/local/bin/phpqa
 ```
 
-### Using Composer
-```bash
-$ composer global require jmolivas/phpqa
-# Make sure you add ~/.composer/vendor/bin/ to your PATH.
-```
-
 ## Usage
 
 ### Copy configuration files to user home directory 
