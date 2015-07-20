@@ -165,7 +165,7 @@ class AnalyzeCommand extends Command
 
     private function analyzer($output, $analyzer, $files, $config, $project)
     {
-        if (!$config->get('application.analyzer.'.$analyzer.'.enabled')) {
+        if (!$config->get('application.analyzer.'.$analyzer.'.enabled', false)) {
             return;
         }
 
@@ -173,11 +173,11 @@ class AnalyzeCommand extends Command
 
         $configFile = $config->getProjectAnalyzerConfigFile($project, $analyzer);
 
-        $exception = $config->get('application.analyzer.'.$analyzer.'.exception');
-        $options = $config->get('application.analyzer.'.$analyzer.'.options');
-        $arguments = $config->get('application.analyzer.'.$analyzer.'.arguments');
-        $prefixes = $config->get('application.analyzer.'.$analyzer.'.prefixes');
-        $postfixes = $config->get('application.analyzer.'.$analyzer.'.postfixes');
+        $exception = $config->get('application.analyzer.'.$analyzer.'.exception', false);
+        $options = $config->get('application.analyzer.'.$analyzer.'.options', []);
+        $arguments = $config->get('application.analyzer.'.$analyzer.'.arguments', []);
+        $prefixes = $config->get('application.analyzer.'.$analyzer.'.prefixes', []);
+        $postfixes = $config->get('application.analyzer.'.$analyzer.'.postfixes', []);
 
         $success = true;
 
@@ -197,18 +197,7 @@ class AnalyzeCommand extends Command
             $singleExecution = $config->get('application.analyzer.'.$analyzer.'.file.single-execution');
 
             if ($singleExecution) {
-                if ($prefixes) {
-                    foreach ($prefixes as $prefix) {
-                        $processArguments[] = $prefix;
-                    }
-                }
-                $processArguments[] = $configFile;
-                if ($postfixes) {
-                    foreach ($postfixes as $postfix) {
-                        $processArguments[] = $postfix;
-                    }
-                }
-                $process = $this->executeProcess($output, $processArguments, $arguments, $options);
+                $process = $this->executeProcess($output, $processArguments, $configFile, $prefixes, $postfixes, $arguments, $options);
                 $success = $process->isSuccessful();
                 $files = [];
             }
@@ -221,21 +210,7 @@ class AnalyzeCommand extends Command
                 continue;
             }
 
-            if ($prefixes) {
-                foreach ($prefixes as $prefix) {
-                    $processArguments[] = $prefix;
-                }
-            }
-
-            $processArguments[] = $file;
-
-            if ($postfixes) {
-                foreach ($postfixes as $postfix) {
-                    $processArguments[] = $postfix;
-                }
-            }
-
-            $process = $this->executeProcess($output, $processArguments, $arguments, $options);
+            $process = $this->executeProcess($output, $processArguments, $file, $prefixes, $postfixes, $arguments, $options);
 
             if ($success) {
                 $success = $process->isSuccessful();
@@ -247,20 +222,26 @@ class AnalyzeCommand extends Command
         }
     }
 
-    public function executeProcess($output, $processArguments, $arguments, $options)
+    public function executeProcess($output, $processArguments, $file, $prefixes, $postfixes, $arguments, $options)
     {
-        $processBuilder = new ProcessBuilder($processArguments);
-
-        if ($arguments) {
-            foreach ($arguments as $argument) {
-                $processBuilder->add($argument);
-            }
+        foreach ($prefixes as $prefix) {
+            $processArguments[] = $prefix;
         }
 
-        if ($options) {
-            foreach ($options as $optionName => $optionValue) {
-                $processBuilder->setOption($optionName, $optionValue);
-            }
+        $processArguments[] = $file;
+
+        foreach ($postfixes as $postfix) {
+            $processArguments[] = $postfix;
+        }
+
+        $processBuilder = new ProcessBuilder($processArguments);
+
+        foreach ($arguments as $argument) {
+            $processBuilder->add($argument);
+        }
+
+        foreach ($options as $optionName => $optionValue) {
+            $processBuilder->setOption($optionName, $optionValue);
         }
 
         $process = $processBuilder->getProcess();
