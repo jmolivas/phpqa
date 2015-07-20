@@ -96,7 +96,6 @@ $ phpqa analyze --project=PROJECT --files[=FILES]
 - Add command to create new project.
 - Add more analyzers:
   - https://github.com/pdepend/pdepend
-  - https://github.com/psecio/iniscan
   - https://github.com/sensiolabs/security-checker
   - https://github.com/sensiolabs/insight
   - https://github.com/Halleck45/PhpMetrics
