@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \JMOlivas\Phpqa\Console\Application.
+ */
+
 namespace JMOlivas\Phpqa\Console;
 
 use Symfony\Component\Console\Application as BaseApplication;
@@ -7,8 +12,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use JMOlivas\Phpqa\Config;
 
+/**
+ * Class Application
+ * @package JMOlivas\Phpqa\Console
+ */
 class Application extends BaseApplication
 {
+    /**
+     * @var \JMOlivas\Phpqa\Config
+     */
     private $config;
 
     /**
@@ -29,6 +41,9 @@ class Application extends BaseApplication
         parent::doRun($input, $output);
     }
 
+    /**
+     * @return string
+     */
     public function getApplicationDirectory()
     {
         return __DIR__.'/../../';
