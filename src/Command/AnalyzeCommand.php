@@ -53,12 +53,7 @@ class AnalyzeCommand extends Command
 
         $this->directory = $application->getApplicationDirectory();
 
-        $output->writeln(
-            sprintf(
-                '<question>%s</question>',
-                $application->getName()
-            )
-        );
+        $output->writeln(sprintf('<question>%s</question>', $application->getName()));
 
         $files = $input->getOption('files');
 
@@ -88,23 +83,11 @@ class AnalyzeCommand extends Command
 
         $this->checkComposer($output, $files, $config);
 
-        $this->analyzer($output, 'parallel-lint', $files, $config, $project);
+        $analyzers = array_keys($config->get('application.analyzer'));
 
-        $this->analyzer($output, 'php-cs-fixer', $files, $config, $project);
-
-        $this->analyzer($output, 'phpcbf', $files, $config, $project);
-
-        $this->analyzer($output, 'phpcs', $files, $config, $project);
-
-        $this->analyzer($output, 'phpmd', $files, $config, $project);
-
-        $this->analyzer($output, 'phploc', $files, $config, $project);
-
-        $this->analyzer($output, 'phpcpd', $files, $config, $project);
-
-        $this->analyzer($output, 'phpdcd', $files, $config, $project);
-
-        $this->analyzer($output, 'phpunit', $files, $config, $project);
+        foreach ($analyzers as $analyzer) {
+            $this->analyzer($output, $analyzer, $files, $config, $project);
+        }
 
         $output->writeln(
             sprintf(
@@ -124,12 +107,12 @@ class AnalyzeCommand extends Command
         );
 
         $files = [];
-        $rc = 0;
+        $result = 0;
 
-        exec('git rev-parse --verify HEAD 2> /dev/null', $files, $rc);
+        exec('git rev-parse --verify HEAD 2> /dev/null', $files, $result);
 
         $against = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
-        if ($rc == 0) {
+        if ($result == 0) {
             $against = 'HEAD';
         }
 
@@ -211,14 +194,26 @@ class AnalyzeCommand extends Command
         ];
 
         if ($configFile) {
-            $processArguments[] = $configFile;
             $singleExecution = $config->get('application.analyzer.'.$analyzer.'.file.single-execution');
 
             if ($singleExecution) {
+                if ($prefixes) {
+                    foreach ($prefixes as $prefix) {
+                        $processArguments[] = $prefix;
+                    }
+                }
+                $processArguments[] = $configFile;
+                if ($postfixes) {
+                    foreach ($postfixes as $postfix) {
+                        $processArguments[] = $postfix;
+                    }
+                }
                 $process = $this->executeProcess($output, $processArguments, $arguments, $options);
                 $success = $process->isSuccessful();
                 $files = [];
             }
+
+            $processArguments[] = $configFile;
         }
 
         foreach ($files as $file) {

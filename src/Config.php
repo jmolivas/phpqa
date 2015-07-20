@@ -79,7 +79,7 @@ class Config
             return;
         }
 
-        $configFile = $this->getBaseConfigDirectory().$project.'.yml';
+        $configFile = $this->getBaseConfigDirectory().$project.'/config.yml';
         if (file_exists($configFile)) {
             $this->loadFile($configFile);
 

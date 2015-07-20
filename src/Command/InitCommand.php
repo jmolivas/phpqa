@@ -15,24 +15,24 @@ class InitCommand extends Command
         'destination' => '.php_cs',
       ],
       [
-        'source' => 'drupal.yml',
+        'source' => 'drupal/config.yml',
         'destination' => 'drupal/config.yml',
+      ],
+      [
+        'source' => 'php/config.yml',
+        'destination' => 'php/config.yml',
+      ],
+      [
+        'source' => 'symfony/config.yml',
+        'destination' => 'symfony/config.yml',
       ],
       [
         'source' => 'messages.yml',
         'destination' => 'messages.yml',
       ],
       [
-        'source' => 'php.yml',
-        'destination' => 'php/config.yml',
-      ],
-      [
         'source' => 'phpunit.xml',
         'destination' => 'phpunit.xml',
-      ],
-      [
-        'source' => 'symfony.yml',
-        'destination' => 'symfony/config.yml',
       ],
     ];
 
