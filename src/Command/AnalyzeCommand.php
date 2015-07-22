@@ -23,16 +23,16 @@ class AnalyzeCommand extends Command
             ->setName('analyze')
             ->setDescription('Analyze code')
             ->addOption(
+                'project',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Project name must be (php, symfony, drupal) or could be empty if a phpqa.yml or phpqa.yml.dist exists at current directory.'
+            )
+            ->addOption(
                 'files',
                 null,
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'File(s) to avalyze'
-            )
-            ->addOption(
-                'project',
-                null,
-                InputOption::VALUE_REQUIRED,
-                'Project name'
+                'File(s) to analyze'
             );
     }
 
@@ -49,6 +49,14 @@ class AnalyzeCommand extends Command
          * @var \JMOlivas\Phpqa\Config $config
          */
         $config = $application->getConfig();
+
+        if (!$project && !$config->isCustom()) {
+            throw new \Exception(
+                'No local phpqa.yml or phpqa.yml.dist at current working directory ' .
+                'you must provide a valid project name (php, symfony or drupal)'
+            );
+        }
+
         $config->loadProjectConfiguration($project);
 
         $this->directory = $application->getApplicationDirectory();
