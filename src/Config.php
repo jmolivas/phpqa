@@ -13,10 +13,16 @@ class Config
 {
     protected $config;
 
+    protected $custom = false;
+
     public function __construct()
     {
         $this->config = [];
         $this->loadFile(__DIR__.'/../'.'config.yml');
+        if ($this->getApplicationConfigFile()) {
+            $this->loadFile($this->getApplicationConfigFile());
+            $this->custom = true;
+        }
         $this->loadFile($this->getBaseConfigDirectory().'messages.yml');
         $this->loadFile($this->getUserHomeDirectory().'messages.yml');
     }
@@ -55,6 +61,11 @@ class Config
         return $config;
     }
 
+    public function getApplicationDirectory()
+    {
+        return getcwd() . '/';
+    }
+
     public function getBaseConfigDirectory()
     {
         return __DIR__.'/../config/';
@@ -70,8 +81,27 @@ class Config
         return rtrim(getenv('HOME') ?: getenv('USERPROFILE'), '/\\');
     }
 
+    public function getApplicationConfigFile()
+    {
+        $configFile = $this->getApplicationDirectory() .'phpqa.yml';
+        if (file_exists($configFile)) {
+            return $configFile;
+        }
+
+        $configFile = $this->getApplicationDirectory() .'phpqa.yml.dist';
+        if (file_exists($configFile)) {
+            return $configFile;
+        }
+
+        return null;
+    }
+
     public function loadProjectConfiguration($project)
     {
+        if ($this->custom) {
+            return;
+        }
+
         $configFile = $this->getUserConfigDirectory().$project.'/config.yml';
         if (file_exists($configFile)) {
             $this->loadFile($configFile);
@@ -98,12 +128,12 @@ class Config
         $analyserConfigOption = key($analyserConfig);
         $analyserConfigFile = current($analyserConfig);
 
-        $configFile = __DIR__.'/../'.$analyserConfigFile;
+        $configFile = $this->getApplicationDirectory().$analyserConfigFile;
         if (file_exists($configFile)) {
             return '--'.$analyserConfigOption.'='.$configFile;
         }
 
-        $configFile = getcwd().'/'.$analyserConfigFile;
+        $configFile = __DIR__.'/../'.$analyserConfigFile;
         if (file_exists($configFile)) {
             return '--'.$analyserConfigOption.'='.$configFile;
         }
@@ -124,10 +154,5 @@ class Config
         }
 
         return '--'.$analyserConfigOption.'='.$analyserConfigFile;
-    }
-
-    public function getConfigData()
-    {
-        return $this->config;
     }
 }
