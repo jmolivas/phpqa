@@ -31,8 +31,8 @@ class InitCommand extends Command
         'destination' => 'messages.yml',
       ],
       [
-        'source' => 'phpunit.xml',
-        'destination' => 'phpunit.xml',
+        'source' => 'phpunit.xml.dist',
+        'destination' => 'phpunit.xml.dist',
       ],
     ];
 
