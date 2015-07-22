@@ -11,14 +11,21 @@ use Symfony\Component\Yaml\Parser;
 
 class Config
 {
+    /**
+     * @var array
+     */
     protected $config;
 
-    protected $custom = false;
+    /**
+     * @var boolean
+     */
+    protected $custom;
 
     public function __construct()
     {
+        $this->custom = false;
         $this->config = [];
-        $this->loadFile(__DIR__.'/../'.'config.yml');
+        $this->loadFile(__DIR__.'/../'.'phpqa.yml');
         if ($this->getApplicationConfigFile()) {
             $this->loadFile($this->getApplicationConfigFile());
             $this->custom = true;
@@ -100,7 +107,7 @@ class Config
 
     public function loadProjectConfiguration($project)
     {
-        if ($this->custom) {
+        if ($this->isCustom()) {
             return;
         }
 
@@ -156,5 +163,13 @@ class Config
         }
 
         return '--'.$analyserConfigOption.'='.$analyserConfigFile;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isCustom()
+    {
+        return $this->custom;
     }
 }
