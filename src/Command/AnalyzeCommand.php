@@ -17,6 +17,12 @@ class AnalyzeCommand extends Command
 
     private $directory;
 
+    private $projects = [
+        'php',
+        'symfony',
+        'drupal'
+    ];
+
     protected function configure()
     {
         $this
@@ -26,7 +32,10 @@ class AnalyzeCommand extends Command
                 'project',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                'Project name must be (php, symfony, drupal) or could be empty if a phpqa.yml or phpqa.yml.dist exists at current directory.'
+                sprintf(
+                    'Project name must be (%) or could be empty if a phpqa.yml or phpqa.yml.dist exists at current directory.',
+                    implode(',', $this->projects)
+                )
             )
             ->addOption(
                 'files',
@@ -50,10 +59,22 @@ class AnalyzeCommand extends Command
          */
         $config = $application->getConfig();
 
-        if (!$project && !$config->isCustom()) {
+        if (!$config->isCustom() && !$project) {
             throw new \Exception(
-                'No local phpqa.yml or phpqa.yml.dist at current working directory ' .
-                'you must provide a valid project name (php, symfony or drupal)'
+                sprintf(
+                  'No local phpqa.yml or phpqa.yml.dist at current working directory ' .
+                  'you must provide a valid project value (%s)',
+                  implode(',', $this->projects)
+                )
+            );
+        }
+
+        if (!$config->isCustom() && !in_array($project, $this->projects)) {
+            throw new \Exception(
+              sprintf(
+                'You must provide a valid project value (%s)',
+                implode(',', $this->projects)
+              )
             );
         }
 

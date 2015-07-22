@@ -19,11 +19,11 @@ class InitCommand extends Command
         'destination' => 'drupal/config.yml',
       ],
       [
-        'source' => 'php/config.yml',
+        'source' => '/../phpqa.yml',
         'destination' => 'php/config.yml',
       ],
       [
-        'source' => 'symfony/config.yml',
+        'source' => '/../phpqa.yml',
         'destination' => 'symfony/config.yml',
       ],
       [
@@ -36,6 +36,17 @@ class InitCommand extends Command
       ],
     ];
 
+    private $projects = [
+      'php',
+      'symfony',
+      'drupal'
+    ];
+
+    private $dirs = [
+      'home',
+      'current'
+    ];
+
     protected function configure()
     {
         $this
@@ -45,7 +56,19 @@ class InitCommand extends Command
                 'dir',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Directory to copy file(s) valid options home, current'
+                sprintf(
+                    'Directory to copy file(s) valid options (%s)',
+                    implode($this->dirs)
+                )
+            )
+            ->addOption(
+                'project',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                sprintf(
+                    'Project name to copy config from, must be (%s).',
+                    implode(',', $this->projects)
+                )
             )
             ->addOption(
                 'override',
@@ -62,9 +85,22 @@ class InitCommand extends Command
 
         $dir = $input->getOption('dir');
 
-        if (!$dir) {
+        if (!$dir || !in_array($dir, $this->dirs)) {
             throw new \Exception(
-                'You must provide a valid dir value (home or current)'
+                sprintf(
+                    'You must provide a valid dir value (%s)',
+                    implode(',', $this->dirs)
+                )
+            );
+        }
+
+        $project = $input->getOption('project');
+        if ($project && !in_array($project, $this->projects)) {
+            throw new \Exception(
+                sprintf(
+                    'You must provide a valid project value (%s)',
+                    implode(',', $this->projects)
+                )
             );
         }
 
@@ -74,7 +110,7 @@ class InitCommand extends Command
         }
 
         if ($dir === 'current') {
-            $this->copyCurrentDirectory($output, $config, $override);
+            $this->copyCurrentDirectory($output, $config, $override, $project);
         }
 
         if ($dir === 'home') {
@@ -82,12 +118,18 @@ class InitCommand extends Command
         }
     }
 
-    private function copyCurrentDirectory($output, $config, $override)
+    private function copyCurrentDirectory($output, $config, $override, $project)
     {
         $baseConfigDirectory = $config->getBaseConfigDirectory();
         $currentDirectory = $config->getApplicationDirectory();
 
         $source = $baseConfigDirectory.'/../phpqa.yml';
+
+        $configFile = $baseConfigDirectory.$project.'/config.yml';
+        if (file_exists($configFile)) {
+            $source = $configFile;
+        }
+
         $destination = $currentDirectory.'phpqa.yml';
 
         if ($this->copyFile($source, $destination, $override)) {
