@@ -1,8 +1,4 @@
 application:
-  project:
-   - php
-   - symfony
-   - drupal
   method:
     git:
       enabled: true
@@ -67,7 +63,7 @@ application:
       enabled: true
       exception: true
       file:
-        configuration: phpunit.xml
+        configuration: phpunit.xml.dist
         single-execution: true
       options:
       arguments:
