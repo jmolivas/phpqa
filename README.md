@@ -82,25 +82,25 @@ $ git clone git@github.com:jmolivas/phpqa.git
 $ cd phpqa
 # download dependencies
 $ composer install
-# make phpqa globally accessible creating a symlink 
-$ ln -s ~/phpqa/bin/phpqa.php /usr/local/bin/phpqa
+# make phpqa globally accessible creating a symlink
+$ ln -s ~/phpqa/bin/phpqa /usr/local/bin/phpqa
 ```
 
 ## Usage
 
-### Copy configuration files to user home directory 
+### Copy configuration files to user home directory
 ```
 $ phpqa init
 ```
 
 ### Analyze a project
-``` 
+```
 $ cd to/project/path
-$ phpqa analyze --project=PROJECT --files[=FILES] 
+$ phpqa analyze --project=PROJECT --files[=FILES]
 ```
 
-| Option  | Description | 
-| ------- | ----------------------------- |  
+| Option  | Description |
+| ------- | ----------------------------- |
 | project | Available default values `php`, `symfony` and `drupal` |
 | files   | If this option is not set then the files added to git index will be scanned. This is useful when setting executing this tool on a pre-commit git-hook. |
 
