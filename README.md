@@ -87,7 +87,7 @@ $ ln -s /path/to/phpqa/bin/phpqa /usr/local/bin/phpqa
 
 ## Usage
 
-### Copy configuration files to user home directory
+### Copy configuration file(s)
 ```
 $ cd to/project/path
 $ phpqa init --project=PROJECT --dir=DIR --override
