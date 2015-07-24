@@ -33,7 +33,7 @@ class AnalyzeCommand extends Command
                 null,
                 InputOption::VALUE_OPTIONAL,
                 sprintf(
-                    'Project name must be (%) or could be empty if a phpqa.yml or phpqa.yml.dist exists at current directory.',
+                    'Project name must be (%s) or could be empty if a phpqa.yml or phpqa.yml.dist exists at current directory.',
                     implode(',', $this->projects)
                 )
             )
@@ -42,6 +42,11 @@ class AnalyzeCommand extends Command
                 null,
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                 'File(s) to analyze'
+            )->addOption(
+                'git',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'All files added to git index will be analyze.'
             );
     }
 
@@ -62,19 +67,19 @@ class AnalyzeCommand extends Command
         if (!$config->isCustom() && !$project) {
             throw new \Exception(
                 sprintf(
-                  'No local phpqa.yml or phpqa.yml.dist at current working directory ' .
-                  'you must provide a valid project value (%s)',
-                  implode(',', $this->projects)
+                    'No local phpqa.yml or phpqa.yml.dist at current working directory ' .
+                    'you must provide a valid project value (%s)',
+                    implode(',', $this->projects)
                 )
             );
         }
 
         if (!$config->isCustom() && !in_array($project, $this->projects)) {
             throw new \Exception(
-              sprintf(
-                'You must provide a valid project value (%s)',
-                implode(',', $this->projects)
-              )
+                sprintf(
+                    'You must provide a valid project value (%s)',
+                    implode(',', $this->projects)
+                )
             );
         }
 
@@ -86,11 +91,25 @@ class AnalyzeCommand extends Command
 
         $files = $input->getOption('files');
 
+        $git = $input->getOption('git');
+
+        if ($files && $git) {
+            throw new \Exception('Options `files` and `git` can not used in combination.');
+        }
+
         if ($files) {
             $files = explode(',', $files[0]);
         }
 
-        if (!$files) {
+        if (!$files[0]) {
+            $files = [];
+        }
+
+        if (!$files && !$git) {
+            throw new \Exception('You must set `files` or `git` options.');
+        }
+
+        if ($git) {
             $files = $this->extractCommitedFiles($output, $config);
         }
 

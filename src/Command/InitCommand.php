@@ -58,13 +58,13 @@ class InitCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 sprintf(
                     'Directory to copy file(s) valid options (%s)',
-                    implode($this->dirs)
+                    implode(',', $this->dirs)
                 )
             )
             ->addOption(
                 'project',
                 null,
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_REQUIRED,
                 sprintf(
                     'Project name to copy config from, must be (%s).',
                     implode(',', $this->projects)
@@ -95,6 +95,7 @@ class InitCommand extends Command
         }
 
         $project = $input->getOption('project');
+
         if ($project && !in_array($project, $this->projects)) {
             throw new \Exception(
                 sprintf(
