@@ -9,8 +9,8 @@ PHPQA Analyzer CLI tool
 - [Available Analyzers](#available-analyzers)
 - [Install](#install)
 - [Usage](#usage)
-- [Upcoming features](#upcoming-features)
-- [Nice to have features](#nice-to-have-features)
+- [Override configuration](#override-configuration)
+- [Possible features](#nice-to-have-features)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -76,46 +76,62 @@ Every analyzer tool handles arguments and options using different formats, the g
 ## Install
 
 ### Cloning the project
-```bash
-$ cd ~
+```
 $ git clone git@github.com:jmolivas/phpqa.git
 $ cd phpqa
 # download dependencies
 $ composer install
 # make phpqa globally accessible creating a symlink
-$ ln -s ~/phpqa/bin/phpqa /usr/local/bin/phpqa
+$ ln -s /path/to/phpqa/bin/phpqa /usr/local/bin/phpqa
 ```
 
 ## Usage
 
 ### Copy configuration files to user home directory
 ```
-$ phpqa init
+$ cd to/project/path
+$ phpqa init --project=PROJECT --dir=DIR --override
 ```
+| Option   | Description |
+| -------- | ----------------------------- |
+| project  | Available values `php`, `symfony` and `drupal`. |
+| dir      | Available values `home`, `current`. |
+| override | If this option is set, files are copied using override flag. |
+
+**NOTES:**
+- Option `override` does not accept a value must be set as `--override`.
 
 ### Analyze a project
 ```
 $ cd to/project/path
-$ phpqa analyze --project=PROJECT --files[=FILES]
+$ phpqa analyze --project=PROJECT --files=FILES
+$ phpqa analyze --project=PROJECT --git
 ```
 
 | Option  | Description |
 | ------- | ----------------------------- |
-| project | Available default values `php`, `symfony` and `drupal` |
-| files   | If this option is not set then the files added to git index will be scanned. This is useful when setting executing this tool on a pre-commit git-hook. |
+| project | Available values `php`, `symfony` and `drupal` |
+| files   | Files or directories to analyze. |
+| git     | If this option is set, all files added to git index will be scanned. This is useful when setting executing this tool on a pre-commit git-hook. |
 
-## Upcoming features
-- Add command to create new project.
-- Add more analyzers:
-  - https://github.com/pdepend/pdepend
-  - https://github.com/sensiolabs/security-checker
-  - https://github.com/sensiolabs/insight
-  - https://github.com/Halleck45/PhpMetrics
+**NOTES:**
+- Option `git` does not accept a value must be set as `--git`.
+- Options `files` and `git` can not used in combination.
+- Option `project` could be omitted if a `phpqa.yml` or `phpqa.yml.dist` file is available at current working directory.
+
+## Override configuration
+This project was built to be fully customizable and you can enable/disable analyzers and modify arguments/options passed to analyzers by updating the `phpqa.yml` or `phpqa.yml.dist` file on your project root or the files `~/.phpqa/php/config.yml`, `~/.phpqa/symfony/config.yml` or `~/.phpqa/drupal/config.yml` copied when running `init` command using `--dir=home`.
 
 ## Nice to have features
+- Add command to create new project.
+- Add more analyzers:
+   - https://github.com/pdepend/pdepend
+   - https://github.com/sensiolabs/security-checker
+   - https://github.com/sensiolabs/insight
+   - https://github.com/Halleck45/PhpMetrics
 - Add analyzer via config and not as composer dependency.
 - Detect if analyzer is already loaded on the local machine and use that instead of download.
 - Add custom analyzers.
-- Add PaaS analyzers via API.
+- Add SaaS analyzers via API.
 
-> Note: This project is a work-in-progress and need some love related to code clean up and testing coverage.
+> This project is a work-in-progress and needs some love related to code clean up, test coverage and documentation.
