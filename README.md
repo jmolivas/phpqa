@@ -10,7 +10,7 @@ PHPQA Analyzer CLI tool
 - [Install](#install)
 - [Usage](#usage)
 - [Override configuration](#override-configuration)
-- [Possible features](#nice-to-have-features)
+- [Nice to have features](#nice-to-have-features)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
