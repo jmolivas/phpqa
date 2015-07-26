@@ -91,7 +91,10 @@ class AnalyzeCommand extends Command
 
         $files = $input->getOption('files');
 
-        $git = $input->getOption('git');
+        $git = false;
+        if ($input->hasOption('git')) {
+            $git = $input->getOption('git');
+        }
 
         if ($files && $git) {
             throw new \Exception('Options `files` and `git` can not used in combination.');
