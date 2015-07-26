@@ -90,15 +90,16 @@ $ ln -s /path/to/phpqa/bin/phpqa /usr/local/bin/phpqa
 ### Copy configuration file(s)
 ```
 $ cd to/project/path
-$ phpqa init --project=PROJECT --dir=DIR --override
+$ phpqa init --project=PROJECT --global --override
 ```
 | Option   | Description |
 | -------- | ----------------------------- |
 | project  | Available values `php`, `symfony` and `drupal`. |
-| dir      | Available values `home`, `current`. |
+| global   | Copy configuration files to user home directory, instead of current working directory. |
 | override | If this option is set, files are copied using override flag. |
 
 **NOTES:**
+- Option `global` does not accept a value must be set as `--global`.
 - Option `override` does not accept a value must be set as `--override`.
 
 ### Analyze a project
