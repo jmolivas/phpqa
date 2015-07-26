@@ -45,7 +45,7 @@ class AnalyzeCommand extends Command
             )->addOption(
                 'git',
                 null,
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_NONE,
                 'All files added to git index will be analyze.'
             );
     }
