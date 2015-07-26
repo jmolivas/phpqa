@@ -53,15 +53,6 @@ class InitCommand extends Command
             ->setName('init')
             ->setDescription('Copy configuration files to user home directory')
             ->addOption(
-                'dir',
-                null,
-                InputOption::VALUE_REQUIRED,
-                sprintf(
-                    'Directory to copy file(s) valid options (%s)',
-                    implode(',', $this->dirs)
-                )
-            )
-            ->addOption(
                 'project',
                 null,
                 InputOption::VALUE_REQUIRED,
@@ -71,10 +62,16 @@ class InitCommand extends Command
                 )
             )
             ->addOption(
+                'global',
+                null,
+                InputOption::VALUE_NONE,
+                'Copy configuration files to user home directory, instead of current working directory.'
+            )
+            ->addOption(
                 'override',
                 null,
                 InputOption::VALUE_NONE,
-                'Override files on directory'
+                'Copy files using override flag.'
             );
     }
 
@@ -83,20 +80,14 @@ class InitCommand extends Command
         $application = $this->getApplication();
         $config = $application->getConfig();
 
-        $dir = $input->getOption('dir');
-
-        if (!$dir || !in_array($dir, $this->dirs)) {
-            throw new \Exception(
-                sprintf(
-                    'You must provide a valid dir value (%s)',
-                    implode(',', $this->dirs)
-                )
-            );
+        $global = false;
+        if ($input->hasOption('global')) {
+            $global = $input->getOption('global');
         }
 
         $project = $input->getOption('project');
 
-        if ($project && !in_array($project, $this->projects)) {
+        if (!$project || !in_array($project, $this->projects)) {
             throw new \Exception(
                 sprintf(
                     'You must provide a valid project value (%s)',
@@ -110,12 +101,12 @@ class InitCommand extends Command
             $override = $input->getOption('override');
         }
 
-        if ($dir === 'current') {
-            $this->copyCurrentDirectory($output, $config, $override, $project);
+        if ($global) {
+            $this->copyHomeDirectory($output, $config, $override);
         }
 
-        if ($dir === 'home') {
-            $this->copyHomeDirectory($output, $config, $override);
+        if (!$global) {
+            $this->copyCurrentDirectory($output, $config, $override, $project);
         }
     }
 
