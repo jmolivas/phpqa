@@ -121,7 +121,7 @@ $ phpqa analyze --project=PROJECT --git
 - Option `project` could be omitted if a `phpqa.yml` or `phpqa.yml.dist` file is available at current working directory.
 
 ## Override configuration
-This project was built to be fully customizable and you can enable/disable analyzers and modify arguments/options passed to analyzers by updating the `phpqa.yml` or `phpqa.yml.dist` file on your project root copied when running init command, or the files `~/.phpqa/php/config.yml`, `~/.phpqa/symfony/config.yml` or `~/.phpqa/drupal/config.yml` copied when running `init` command using `--global` option.
+This project was built to be fully customizable, you can enable/disable analyzers and modify arguments/options passed to analyzers by updating the `phpqa.yml` or `phpqa.yml.dist` file on your project root copied when running `init` command, or the files `~/.phpqa/php/config.yml`, `~/.phpqa/symfony/config.yml` or `~/.phpqa/drupal/config.yml` copied when running `init` command using `--global` option.
 
 ## Nice to have features
 - Add command to create new project.
