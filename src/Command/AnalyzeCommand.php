@@ -257,7 +257,7 @@ class AnalyzeCommand extends Command
         }
 
         foreach ($files as $file) {
-            if (!preg_match($this->needle, $file) && !is_dir(realpath($this->directory.$file))) {
+            if (!preg_match($this->needle, $file) && !is_dir($config->getApplicationDirectory().$file)) {
                 continue;
             }
 
