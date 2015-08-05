@@ -90,7 +90,8 @@ $ ln -s /path/to/phpqa/bin/phpqa /usr/local/bin/phpqa
 ### Copy configuration file(s)
 ```
 $ cd to/project/path
-$ phpqa init --project=PROJECT --global --override
+$ phpqa init --project=PROJECT --override
+$ phpqa init --global --override
 ```
 | Option   | Description |
 | -------- | ----------------------------- |
@@ -101,6 +102,7 @@ $ phpqa init --project=PROJECT --global --override
 **NOTES:**
 - Option `global` does not accept a value must be set as `--global`.
 - Option `override` does not accept a value must be set as `--override`.
+- Options `project` and `global` can not used in combination.
 
 ### Analyze a project
 ```
@@ -117,8 +119,8 @@ $ phpqa analyze --project=PROJECT --git
 
 **NOTES:**
 - Option `git` does not accept a value must be set as `--git`.
-- Options `files` and `git` can not used in combination.
 - Option `project` could be omitted if a `phpqa.yml` or `phpqa.yml.dist` file is available at current working directory.
+- Options `files` and `git` can not used in combination.
 
 ## Override configuration
 This project was built to be fully customizable and you can enable/disable analyzers and modify arguments/options passed to analyzers by updating the `phpqa.yml` or `phpqa.yml.dist` file on your project root copied when running init command, or the files `~/.phpqa/php/config.yml`, `~/.phpqa/symfony/config.yml` or `~/.phpqa/drupal/config.yml` copied when running `init` command using `--global` option.
