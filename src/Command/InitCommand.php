@@ -87,7 +87,11 @@ class InitCommand extends Command
 
         $project = $input->getOption('project');
 
-        if (!$project || !in_array($project, $this->projects)) {
+        if ($global && $project) {
+            throw new \Exception('Options `project` and `global` can not used in combination.');
+        }
+
+        if (!$global && (!$project || !in_array($project, $this->projects))) {
             throw new \Exception(
                 sprintf(
                     'You must provide a valid project value (%s)',
