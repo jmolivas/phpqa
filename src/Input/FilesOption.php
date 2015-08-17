@@ -38,8 +38,8 @@ class FilesOption
     /**
      * Normalize the provided values as an array
      *
-     * - If it's is empty, it returns an empty array
-     * - If it's a single value separated by commas, it returns the corresponding array
+     * - If it's either empty or absent, it returns an empty array
+     * - If it's a single value separated by commas, it converts it to array
      * - Otherwise returns the value as is.
      *
      * @return array
