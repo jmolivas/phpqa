@@ -2,6 +2,8 @@
 
 namespace JMOlivas\Phpqa\Command;
 
+use Exception;
+use JMOlivas\Phpqa\Input\FilesOption;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -46,7 +48,7 @@ class AnalyzeCommand extends Command
                 'git',
                 null,
                 InputOption::VALUE_NONE,
-                'All files added to git index will be analyze.'
+                'All files added to git index will be analyzed.'
             );
     }
 
@@ -65,7 +67,7 @@ class AnalyzeCommand extends Command
         $config = $application->getConfig();
 
         if (!$config->isCustom() && !$project) {
-            throw new \Exception(
+            throw new Exception(
                 sprintf(
                     'No local phpqa.yml or phpqa.yml.dist at current working directory ' .
                     'you must provide a valid project value (%s)',
@@ -75,7 +77,7 @@ class AnalyzeCommand extends Command
         }
 
         if (!$config->isCustom() && !in_array($project, $this->projects)) {
-            throw new \Exception(
+            throw new Exception(
                 sprintf(
                     'You must provide a valid project value (%s)',
                     implode(',', $this->projects)
@@ -89,27 +91,25 @@ class AnalyzeCommand extends Command
 
         $output->writeln(sprintf('<question>%s</question>', $application->getName()));
 
-        $files = $input->getOption('files');
+        $filesOption = new FilesOption($input->getOption('files'));
+        $git = $input->getOption('git');
 
-        $git = false;
-        if ($input->hasOption('git')) {
-            $git = $input->getOption('git');
+        if (!$filesOption->isAbsent() && $git) {
+            throw new Exception('Options `files` and `git` cannot be used in combination.');
         }
 
-        if (!empty($files) && $git) {
-            throw new \Exception('Options `files` and `git` can not used in combination.');
+        if ($filesOption->isAbsent() && !$git) {
+            throw new Exception('You must set `files` or `git` options.');
         }
 
-        if (!empty($files)) {
-            $files = explode(',', $files[0]);
-        }
-
-        if (empty($files) && !$git) {
-            throw new \Exception('You must set `files` or `git` options.');
+        if (!$filesOption->isAbsent() && $filesOption->isEmpty()) {
+            throw new Exception('Options `files` needs at least one file.');
         }
 
         if ($git) {
             $files = $this->extractCommitedFiles($output, $config);
+        } else {
+            $files = $filesOption->normalize();
         }
 
         $output->writeln(
@@ -198,7 +198,7 @@ class AnalyzeCommand extends Command
 
         if ($config->get('application.method.composer.exception')) {
             if ($composerJsonDetected && !$composerLockDetected) {
-                throw new \Exception($config->get('application.messages.composer.error'));
+                throw new Exception($config->get('application.messages.composer.error'));
             }
 
             $output->writeln(
@@ -265,7 +265,7 @@ class AnalyzeCommand extends Command
         }
 
         if ($exception && !$success) {
-            throw new \Exception($config->get('application.messages.'.$analyzer.'.error'));
+            throw new Exception($config->get('application.messages.'.$analyzer.'.error'));
         }
     }
 
@@ -308,7 +308,7 @@ class AnalyzeCommand extends Command
     private function validateBinary($binaryFile)
     {
         if (!file_exists($this->directory.$binaryFile)) {
-            throw new \Exception(
+            throw new Exception(
                 sprintf('%s do not exist!', $binaryFile)
             );
         }
