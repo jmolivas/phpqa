@@ -23,6 +23,12 @@ class Application extends BaseApplication
      */
     private $config;
 
+    public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN')
+    {
+        parent::__construct($name, $version);
+        $this->config = new Config();
+    }
+
     /**
      * @return \JMOlivas\Phpqa\Config
      */
@@ -32,20 +38,10 @@ class Application extends BaseApplication
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function doRun(InputInterface $input, OutputInterface $output)
-    {
-        $this->config = new Config();
-
-        parent::doRun($input, $output);
-    }
-
-    /**
      * @return string
      */
     public function getApplicationDirectory()
     {
-        return __DIR__.'/../../';
+        return __DIR__ . '/../../';
     }
 }
