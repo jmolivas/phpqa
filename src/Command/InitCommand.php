@@ -42,11 +42,6 @@ class InitCommand extends Command
       'drupal'
     ];
 
-    private $dirs = [
-      'home',
-      'current'
-    ];
-
     protected function configure()
     {
         $this

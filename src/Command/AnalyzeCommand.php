@@ -8,8 +8,14 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use JMOlivas\Phpqa\Style\SymfonyStyle;
 use Symfony\Component\Process\ProcessBuilder;
 
+/**
+ * Class AnalyzeCommand
+ *
+ * @package JMOlivas\Phpqa\Command
+ */
 class AnalyzeCommand extends Command
 {
     /**
@@ -17,14 +23,23 @@ class AnalyzeCommand extends Command
      */
     private $needle = '/(\.php)|(\.inc)$/';
 
+    /**
+     * @var
+     */
     private $directory;
 
+    /**
+     * @var array
+     */
     private $projects = [
         'php',
         'symfony',
         'drupal'
     ];
 
+    /**
+     *
+     */
     protected function configure()
     {
         $this
@@ -52,8 +67,12 @@ class AnalyzeCommand extends Command
             );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
         $project = $input->getOption('project');
 
         /**
@@ -62,7 +81,7 @@ class AnalyzeCommand extends Command
         $application = $this->getApplication();
 
         /**
-         * @var \JMOlivas\Phpqa\Config $config
+         * @var \JMOlivas\Phpqa\Utils\Config $config
          */
         $config = $application->getConfig();
 
@@ -89,7 +108,7 @@ class AnalyzeCommand extends Command
 
         $this->directory = $application->getApplicationDirectory();
 
-        $output->writeln(sprintf('<question>%s</question>', $application->getName()));
+        $io->section($application->getName());
 
         $filesOption = new FilesOption($input->getOption('files'));
         $git = $input->getOption('git');
@@ -107,36 +126,21 @@ class AnalyzeCommand extends Command
         }
 
         if ($git) {
-            $files = $this->extractCommitedFiles($output, $config);
+            $files = $this->extractCommitedFiles($io, $config);
         } else {
             $files = $filesOption->normalize();
         }
 
-        $output->writeln(
-            sprintf(
-                '<info>%s</info>',
-                $config->get('application.messages.files.info')
-            )
-        );
-
-        foreach ($files as $file) {
-            $output->writeln(
-                sprintf(
-                    '<comment> - %s</comment>',
-                    $file
-                )
-            );
-        }
-
-        $this->checkComposer($output, $files, $config);
-
+        $io->info($config->get('application.messages.files.info'));
+        $io->listing($files);
+        $this->checkComposer($io, $files, $config);
         $analyzers = array_keys($config->get('application.analyzer'));
 
         foreach ($analyzers as $analyzer) {
-            $this->analyzer($output, $analyzer, $files, $config, $project);
+            $this->analyzer($io, $analyzer, $files, $config, $project);
         }
 
-        $output->writeln(
+        $io->writeln(
             sprintf(
                 '<info>%s</info>',
                 $config->get('application.messages.completed.info')
@@ -144,14 +148,14 @@ class AnalyzeCommand extends Command
         );
     }
 
-    private function extractCommitedFiles($output, $config)
+    /**
+     * @param $io
+     * @param $config
+     * @return array
+     */
+    private function extractCommitedFiles(SymfonyStyle $io, $config)
     {
-        $output->writeln(
-            sprintf(
-                '<info>%s</info>',
-                $config->get('application.messages.git.info')
-            )
-        );
+        $io->info($config->get('application.messages.git.info'));
 
         $files = [];
         $result = 0;
@@ -170,18 +174,19 @@ class AnalyzeCommand extends Command
         return $files;
     }
 
-    private function checkComposer($output, $files, $config)
+    /**
+     * @param $io
+     * @param $files
+     * @param $config
+     * @throws \Exception
+     */
+    private function checkComposer(SymfonyStyle $io, $files, $config)
     {
         if (!$config->get('application.method.composer.enabled')) {
             return;
         }
 
-        $output->writeln(
-            sprintf(
-                '<info>%s</info>',
-                $config->get('application.messages.composer.info')
-            )
-        );
+        $io->info($config->get('application.messages.composer.info'));
 
         $composerJsonDetected = false;
         $composerLockDetected = false;
@@ -201,16 +206,19 @@ class AnalyzeCommand extends Command
                 throw new Exception($config->get('application.messages.composer.error'));
             }
 
-            $output->writeln(
-                sprintf(
-                    '<error> %s</error>',
-                    $config->get('application.messages.composer.error')
-                )
-            );
+            $io->error($config->get('application.messages.composer.error'));
         }
     }
 
-    private function analyzer($output, $analyzer, $files, $config, $project)
+    /**
+     * @param $io
+     * @param $analyzer
+     * @param $files
+     * @param $config
+     * @param $project
+     * @throws \Exception
+     */
+    private function analyzer(SymfonyStyle $io, $analyzer, $files, $config, $project)
     {
         if (!$config->get('application.analyzer.'.$analyzer.'.enabled', false)) {
             return;
@@ -228,12 +236,7 @@ class AnalyzeCommand extends Command
 
         $success = true;
 
-        $output->writeln(
-            sprintf(
-                '<info>%s</info>',
-                $config->get('application.messages.'.$analyzer.'.info')
-            )
-        );
+        $io->info($config->get('application.messages.'.$analyzer.'.info'));
 
         $processArguments = [
           'php',
@@ -244,7 +247,7 @@ class AnalyzeCommand extends Command
             $singleExecution = $config->get('application.analyzer.'.$analyzer.'.file.single-execution');
 
             if ($singleExecution) {
-                $process = $this->executeProcess($output, $processArguments, $configFile, $prefixes, $postfixes, $arguments, $options);
+                $process = $this->executeProcess($io, $processArguments, $configFile, $prefixes, $postfixes, $arguments, $options);
                 $success = $process->isSuccessful();
                 $files = [];
             }
@@ -257,7 +260,7 @@ class AnalyzeCommand extends Command
                 continue;
             }
 
-            $process = $this->executeProcess($output, $processArguments, $file, $prefixes, $postfixes, $arguments, $options);
+            $process = $this->executeProcess($io, $processArguments, $file, $prefixes, $postfixes, $arguments, $options);
 
             if ($success) {
                 $success = $process->isSuccessful();
@@ -269,7 +272,17 @@ class AnalyzeCommand extends Command
         }
     }
 
-    public function executeProcess($output, $processArguments, $file, $prefixes, $postfixes, $arguments, $options)
+    /**
+     * @param $io
+     * @param $processArguments
+     * @param $file
+     * @param $prefixes
+     * @param $postfixes
+     * @param $arguments
+     * @param $options
+     * @return \Symfony\Component\Process\Process
+     */
+    public function executeProcess(SymfonyStyle $io, $processArguments, $file, $prefixes, $postfixes, $arguments, $options)
     {
         foreach ($prefixes as $prefix) {
             $processArguments[] = $prefix;
@@ -295,16 +308,20 @@ class AnalyzeCommand extends Command
         $process->run();
 
         if (!$process->isSuccessful()) {
-            $output->writeln(sprintf('<error>%s</error>', trim($process->getErrorOutput())));
+            $io->error(trim($process->getErrorOutput()));
         }
 
         if ($process->getOutput()) {
-            $output->writeln($process->getOutput());
+            $io->writeln($process->getOutput());
         }
 
         return $process;
     }
 
+    /**
+     * @param $binaryFile
+     * @throws \Exception
+     */
     private function validateBinary($binaryFile)
     {
         if (!file_exists($this->directory.$binaryFile)) {

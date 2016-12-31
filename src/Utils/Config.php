@@ -5,7 +5,7 @@
  * Contains \JMOlivas\Phpqa\Config.
  */
 
-namespace JMOlivas\Phpqa;
+namespace JMOlivas\Phpqa\Utils;
 
 use Symfony\Component\Yaml\Parser;
 
@@ -25,7 +25,7 @@ class Config
     {
         $this->custom = false;
         $this->config = [];
-        $this->loadFile(__DIR__.'/../'.'phpqa.yml');
+        $this->loadFile(__DIR__.'/../../'.'phpqa.yml');
         if ($this->getApplicationConfigFile()) {
             $this->loadFile($this->getApplicationConfigFile());
             $this->custom = true;
@@ -77,7 +77,7 @@ class Config
 
     public function getBaseConfigDirectory()
     {
-        return __DIR__.'/../config/';
+        return __DIR__.'/../../config/';
     }
 
     public function getUserConfigDirectory()

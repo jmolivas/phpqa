@@ -13,14 +13,14 @@
     ],
     "require": {
         "php": ">=5.4.5",
-        "symfony/console": "2.7.*",
-        "symfony/config":"2.7.*",
-        "symfony/process": "2.7.*",
+        "symfony/console": "2.8.*",
+        "symfony/config":"2.8.*",
+        "symfony/process": "2.8.*",
         "jakub-onderka/php-parallel-lint": "0.*",
         "jakub-onderka/php-console-highlighter": "0.*",
         "fabpot/php-cs-fixer": "@stable",
         "squizlabs/php_codesniffer": "2.5.1",
-        "drupal/coder": "8.2.7",
+        "drupal/coder": "8.*",
         "phpmd/phpmd" : "@stable",
         "phploc/phploc": "@stable",
         "sebastian/phpcpd": "@stable",
@@ -29,7 +29,8 @@
     },
     "bin": ["bin/phpqa"],
     "config": {
-        "bin-dir": "bin/"
+        "bin-dir": "bin/",
+        "secure-http" : false
     },
     "autoload": {
         "psr-4": {"JMOlivas\\Phpqa\\": "src"}

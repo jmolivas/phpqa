@@ -6,6 +6,10 @@
  * http://carlosbuenosvinos.com/write-your-git-hooks-in-php-and-keep-them-under-git-control/
  */
 
+use JMOlivas\Phpqa\Application;
+use JMOlivas\Phpqa\Command\AnalyzeCommand;
+use JMOlivas\Phpqa\Command\InitCommand;
+
 if (file_exists(__DIR__.'/../vendor/autoload.php')) {
     require_once __DIR__.'/../vendor/autoload.php';
 } elseif (file_exists(__DIR__.'/../../../autoload.php')) {
@@ -16,11 +20,7 @@ if (file_exists(__DIR__.'/../vendor/autoload.php')) {
     exit(1);
 }
 
-use JMOlivas\Phpqa\Console\Application;
-use JMOlivas\Phpqa\Command\AnalyzeCommand;
-use JMOlivas\Phpqa\Command\InitCommand;
-
-$application = new Application('PHP QA Analyzer', '0.0.1');
+$application = new Application();
 $application->add(new AnalyzeCommand());
 $application->add(new InitCommand());
 $application->run();
