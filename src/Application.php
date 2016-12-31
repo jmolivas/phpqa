@@ -5,15 +5,14 @@
  * Contains \JMOlivas\Phpqa\Console\Application.
  */
 
-namespace JMOlivas\Phpqa\Console;
+namespace JMOlivas\Phpqa;
 
 use Symfony\Component\Console\Application as BaseApplication;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use JMOlivas\Phpqa\Config;
+use JMOlivas\Phpqa\Utils\Config;
 
 /**
  * Class Application
+ *
  * @package JMOlivas\Phpqa\Console
  */
 class Application extends BaseApplication
@@ -23,9 +22,9 @@ class Application extends BaseApplication
      */
     private $config;
 
-    public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN')
+    public function __construct()
     {
-        parent::__construct($name, $version);
+        parent::__construct('PHP QA Analyzer', '0.1.0');
         $this->config = new Config();
     }
 
@@ -42,6 +41,6 @@ class Application extends BaseApplication
      */
     public function getApplicationDirectory()
     {
-        return __DIR__ . '/../../';
+        return __DIR__ . '/../';
     }
 }

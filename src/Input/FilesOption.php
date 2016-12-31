@@ -4,7 +4,9 @@ namespace JMOlivas\Phpqa\Input;
 
 class FilesOption
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     private $files;
 
     /**
