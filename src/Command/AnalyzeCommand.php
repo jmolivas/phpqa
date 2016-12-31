@@ -38,7 +38,7 @@ class AnalyzeCommand extends Command
     ];
 
     /**
-     *
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -239,15 +239,23 @@ class AnalyzeCommand extends Command
         $io->info($config->get('application.messages.'.$analyzer.'.info'));
 
         $processArguments = [
-          'php',
-          $this->directory.'bin/'.$analyzer
+            'php',
+            $this->directory.'bin/'.$analyzer
         ];
 
         if ($configFile) {
             $singleExecution = $config->get('application.analyzer.'.$analyzer.'.file.single-execution');
 
             if ($singleExecution) {
-                $process = $this->executeProcess($io, $processArguments, $configFile, $prefixes, $postfixes, $arguments, $options);
+                $process = $this->executeProcess(
+                    $io,
+                    $processArguments,
+                    $configFile,
+                    $prefixes,
+                    $postfixes,
+                    $arguments,
+                    $options
+                );
                 $success = $process->isSuccessful();
                 $files = [];
             }
@@ -260,7 +268,15 @@ class AnalyzeCommand extends Command
                 continue;
             }
 
-            $process = $this->executeProcess($io, $processArguments, $file, $prefixes, $postfixes, $arguments, $options);
+            $process = $this->executeProcess(
+                $io,
+                $processArguments,
+                $file,
+                $prefixes,
+                $postfixes,
+                $arguments,
+                $options
+            );
 
             if ($success) {
                 $success = $process->isSuccessful();

@@ -24,7 +24,7 @@ class Application extends BaseApplication
 
     public function __construct()
     {
-        parent::__construct('PHP QA Analyzer', '0.1.0');
+        parent::__construct('PHP QA Analyzer', '0.2.0');
         $this->config = new Config();
     }
 
