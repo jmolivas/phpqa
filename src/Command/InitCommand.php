@@ -52,7 +52,7 @@ class InitCommand extends Command
                 null,
                 InputOption::VALUE_REQUIRED,
                 sprintf(
-                    'Project name to copy config from, must be (%s).',
+                    'Project name to copy config from, should be (%s).',
                     implode(',', $this->projects)
                 )
             )
