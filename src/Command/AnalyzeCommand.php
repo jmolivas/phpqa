@@ -37,6 +37,19 @@ class AnalyzeCommand extends Command
         'drupal'
     ];
 
+    private $analyzerBinaries = [
+        'parallel-lint' => 'jakub-onderka/php-parallel-lint/parallel-lint',
+        'pdepend' => 'pdepend/pdepend/src/bin/pdepend',
+        'php-cs-fixer' => 'fabpot/php-cs-fixer/php-cs-fixer',
+        'phpcbf' =>'squizlabs/php_codesniffer/scripts/phpcbf',
+        'phpcpd' => 'sebastian/phpcpd/phpcpd',
+        'phpcs' => 'squizlabs/php_codesniffer/scripts/phpcs',
+        'phpdcd' => 'sebastian/phpdcd/phpdcd',
+        'phploc' => 'phploc/phploc/phploc',
+        'phpmd' => 'phpmd/phpmd/src/bin/phpmd',
+        'phpunit' => 'phpunit/phpunit/phpunit'
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -224,7 +237,7 @@ class AnalyzeCommand extends Command
             return;
         }
 
-        $this->validateBinary('bin/'.$analyzer);
+        $analizerBinary = $this->calculateBinary($analyzer);
 
         $configFile = $config->getProjectAnalyzerConfigFile($project, $analyzer);
 
@@ -240,7 +253,7 @@ class AnalyzeCommand extends Command
 
         $processArguments = [
             'php',
-            $this->directory.'bin/'.$analyzer
+            $this->directory.$analizerBinary
         ];
 
         if ($configFile) {
@@ -335,15 +348,28 @@ class AnalyzeCommand extends Command
     }
 
     /**
-     * @param $binaryFile
+     * @param $analyzer
      * @throws \Exception
      */
-    private function validateBinary($binaryFile)
+    private function calculateBinary($analyzer)
     {
-        if (!file_exists($this->directory.$binaryFile)) {
-            throw new Exception(
-                sprintf('%s do not exist!', $binaryFile)
-            );
+        $binaries = [
+            '/bin/'.$analyzer
+        ];
+
+        if (array_key_exists($analyzer, $this->analyzerBinaries)) {
+            $binaries[] = '/../../'.$this->analyzerBinaries[$analyzer];
+            $binaries[] = '/../../../'.$this->analyzerBinaries[$analyzer];
         }
+
+        foreach ($binaries as $binary) {
+            if (file_exists($this->directory.$binary)) {
+                return $binary;
+            }
+        }
+
+        throw new Exception(
+            sprintf('%s do not exist!', $analyzer)
+        );
     }
 }
