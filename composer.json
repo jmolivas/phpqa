@@ -13,9 +13,9 @@
     ],
     "require": {
         "php": ">=5.4.5",
-        "symfony/console": "2.8.*",
-        "symfony/config":"2.8.*",
-        "symfony/process": "2.8.*",
+        "symfony/console": ">=2.8 <3.2",
+        "symfony/config":">=2.8 <3.2",
+        "symfony/process": ">=2.8 <3.2",
         "jakub-onderka/php-parallel-lint": "0.*",
         "jakub-onderka/php-console-highlighter": "0.*",
         "fabpot/php-cs-fixer": "@stable",
@@ -25,7 +25,7 @@
         "phploc/phploc": "@stable",
         "sebastian/phpcpd": "@stable",
         "sebastian/phpdcd": "@stable",
-        "phpunit/phpunit": "4.6.*"
+        "phpunit/phpunit": "4.*"
     },
     "bin": ["bin/phpqa"],
     "config": {
