@@ -17,12 +17,12 @@ application:
       enabled: true
       exception: false
       file:
-        standard: vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml
+        standard: ../vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml
     phpcs:
       enabled: true
       exception: false
       file:
-        standard: vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml
+        standard: ../vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml
     phpmd:
       enabled: false
       exception: false

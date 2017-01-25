@@ -237,7 +237,7 @@ class AnalyzeCommand extends Command
             return;
         }
 
-        $analizerBinary = $this->calculateBinary($analyzer);
+        $analyzerBinary = $this->calculateBinary($analyzer);
 
         $configFile = $config->getProjectAnalyzerConfigFile($project, $analyzer);
 
@@ -253,7 +253,7 @@ class AnalyzeCommand extends Command
 
         $processArguments = [
             'php',
-            $this->directory.$analizerBinary
+            $this->directory.$analyzerBinary
         ];
 
         if ($configFile) {
