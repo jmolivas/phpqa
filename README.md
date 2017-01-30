@@ -82,7 +82,7 @@ $ cd phpqa
 # download dependencies
 $ composer install
 # make phpqa globally accessible creating a symlink
-$ ln -s /path/to/phpqa/bin/phpqa /usr/local/bin/phpqa
+$ ln -s bin/phpqa /usr/local/bin/phpqa
 ```
 
 ## Usage
