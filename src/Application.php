@@ -18,7 +18,7 @@ use JMOlivas\Phpqa\Utils\Config;
 class Application extends BaseApplication
 {
     /**
-     * @var \JMOlivas\Phpqa\Config
+     * @var \JMOlivas\Phpqa\Utils\Config
      */
     private $config;
 
@@ -29,7 +29,7 @@ class Application extends BaseApplication
     }
 
     /**
-     * @return \JMOlivas\Phpqa\Config
+     * @return \JMOlivas\Phpqa\Utils\Config
      */
     public function getConfig()
     {
